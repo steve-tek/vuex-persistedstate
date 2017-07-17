@@ -2,12 +2,12 @@ import merge from 'lodash.merge';
 import objectPath from 'object-path';
 
 const defaultReducer = (state, paths) =>
-  (paths.length === 0
+  paths.length === 0
     ? state
     : paths.reduce((substate, path) => {
         objectPath.set(substate, path, objectPath.get(state, path));
         return substate;
-      }, {}));
+      }, {});
 
 const canWriteStorage = storage => {
   try {
@@ -47,6 +47,7 @@ export default function createPersistedState(
   return store => {
     const savedState = getState(key, storage);
     if (typeof savedState === 'object') {
+      paths.forEach(key => delete store.state[key]);
       store.replaceState(merge({}, store.state, savedState));
     }
 

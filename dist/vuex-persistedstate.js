@@ -62,6 +62,7 @@ function createPersistedState(
   return function (store) {
     var savedState = getState(key, storage);
     if (typeof savedState === 'object') {
+      paths.forEach(function (key) { return delete store.state[key]; });
       store.replaceState(merge({}, store.state, savedState));
     }
 
